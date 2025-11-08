@@ -180,51 +180,83 @@ Open your browser and navigate to: **http://localhost:5173**
 
 ## 📊 Database Schema
 
+The application uses PostgreSQL with Prisma ORM. Below is an overview of the main tables:
+
+| Table | Key Columns | Purpose |
+|-------|-------------|---------|
+| **routes** | `id`, `route_id`, `year`, `ghg_intensity`, `is_baseline` | Store vessel route data with fuel consumption and emissions |
+| **ship_compliance** | `id`, `ship_id`, `year`, `cb_gco2eq` | Computed Compliance Balance (CB) records |
+| **bank_entries** | `id`, `ship_id`, `year`, `amount_gco2eq` | Banked surplus credits (Article 20) |
+| **pools** | `id`, `year`, `created_at` | Pool registry for compliance pooling |
+| **pool_members** | `pool_id`, `ship_id`, `cb_before`, `cb_after` | Pool member allocations (Article 21) |
+
+### Detailed Schema
+
 ```prisma
 model Route {
-  id                String   @id @default(uuid())
-  routeId           String   @unique
-  vesselType        String
-  fuelType          String
-  year              Int
-  ghgIntensity      Float
-  fuelConsumption   Float
-  distance          Float
-  totalEmissions    Float
-  isBaseline        Boolean  @default(false)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              String   @id @default(uuid())
+  routeId         String   @unique
+  vesselType      String
+  fuelType        String
+  year            Int
+  ghgIntensity    Float    // gCO₂e/MJ
+  fuelConsumption Float    // tonnes
+  distance        Float    // km
+  totalEmissions  Float    // tonnes CO₂e
+  isBaseline      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("routes")
 }
 
-model Banking {
-  id           String   @id @default(uuid())
-  shipId       String
-  year         Int
-  cbBanked     Float
-  expiryYear   Int
-  isUsed       Boolean  @default(false)
-  createdAt    DateTime @default(now())
-}
-
-model Pooling {
-  id           String   @id @default(uuid())
-  poolId       String   @unique
-  year         Int
-  vesselIds    String[]
-  totalCB      Float
-  createdAt    DateTime @default(now())
-}
-
-model Compliance {
-  id               String   @id @default(uuid())
-  shipId           String
-  year             Int
-  complianceBalance Float
-  adjustedCB       Float?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+model ShipCompliance {
+  id        String   @id @default(uuid())
+  shipId    String
+  year      Int
+  cbGco2eq  Float    // Compliance Balance in gCO₂e
+  energy    Float    // Energy in scope (MJ)
+  actual    Float    // Actual GHG intensity
+  target    Float    // Target GHG intensity
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   
   @@unique([shipId, year])
+  @@map("ship_compliance")
+}
+
+model BankEntry {
+  id          String   @id @default(uuid())
+  shipId      String
+  year        Int
+  amountGco2eq Float   // Amount banked (positive)
+  applied     Boolean  @default(false)
+  appliedYear Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("bank_entries")
+}
+
+model Pool {
+  id        String       @id @default(uuid())
+  year      Int
+  totalCb   Float
+  createdAt DateTime     @default(now())
+  members   PoolMember[]
+  
+  @@map("pools")
+}
+
+model PoolMember {
+  id       String @id @default(uuid())
+  poolId   String
+  shipId   String
+  cbBefore Float
+  cbAfter  Float
+  pool     Pool   @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  
+  @@map("pool_members")
 }
 ```
 
