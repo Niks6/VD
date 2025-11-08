@@ -22,9 +22,10 @@ export function createRouter(
   router.get('/compliance/adjusted-cb', complianceController.getAdjustedCompliance);
 
   // Banking endpoints
+  router.get('/banking/records', bankingController.getBankingRecords);
+  router.get('/banking/balance', bankingController.getAvailableBalance);
   router.post('/banking/bank', bankingController.bankSurplus);
   router.post('/banking/apply', bankingController.applyBanked);
-  router.get('/banking/balance', bankingController.getAvailableBalance);
 
   // Pooling endpoints
   router.post('/pools', poolingController.createPool);

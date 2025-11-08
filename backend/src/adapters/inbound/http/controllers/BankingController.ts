@@ -58,4 +58,24 @@ export class BankingController {
       next(error);
     }
   };
+
+  getBankingRecords = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { shipId, year } = req.query;
+
+      if (!shipId) {
+        res.status(400).json({ error: 'shipId is required' });
+        return;
+      }
+
+      const records = await this.bankingService.getBankingRecords(
+        shipId as string,
+        year ? parseInt(year as string) : undefined
+      );
+
+      res.json(records);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

@@ -5,7 +5,15 @@ import { BankEntry } from '../../core/domain/Banking';
 export class PrismaBankingRepository implements IBankingRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async findByShipAndYear(shipId: string, year: number): Promise<BankEntry[]> {
+  async findByShipAndYear(shipId: string, year?: number): Promise<BankEntry[]> {
+    if (year === undefined) {
+      // Return all entries for the ship
+      return this.prisma.bankEntry.findMany({
+        where: { shipId },
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+
     return this.prisma.bankEntry.findMany({
       where: {
         OR: [
@@ -13,6 +21,7 @@ export class PrismaBankingRepository implements IBankingRepository {
           { shipId, appliedYear: year }, // Entries applied to this year
         ],
       },
+      orderBy: { createdAt: 'desc' },
     });
   }
 

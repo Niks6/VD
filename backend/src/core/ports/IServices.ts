@@ -1,7 +1,7 @@
 // Inbound ports - Use case interfaces
 import { Route, RouteFilters } from '../domain/Route';
 import { ComplianceBalance, AdjustedCompliance } from '../domain/Compliance';
-import { BankingResult, BankSurplusRequest, ApplyBankingRequest } from '../domain/Banking';
+import { BankingResult, BankSurplusRequest, ApplyBankingRequest, BankEntry } from '../domain/Banking';
 import { Pool, CreatePoolRequest, PoolValidationResult } from '../domain/Pool';
 import { ComparisonResult } from '../domain/Comparison';
 
@@ -24,6 +24,7 @@ export interface IBankingService {
   bankSurplus(request: BankSurplusRequest): Promise<BankingResult>;
   applyBanked(request: ApplyBankingRequest): Promise<BankingResult>;
   getAvailableBalance(shipId: string): Promise<number>;
+  getBankingRecords(shipId: string, year?: number): Promise<BankEntry[]>;
 }
 
 // Pooling Use Cases

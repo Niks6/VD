@@ -113,4 +113,11 @@ export class BankingService implements IBankingService {
   async getAvailableBalance(shipId: string): Promise<number> {
     return this.bankingRepository.findAvailableBalance(shipId);
   }
+
+  /**
+   * Get banking records for a ship, optionally filtered by year
+   */
+  async getBankingRecords(shipId: string, year?: number): Promise<any[]> {
+    return this.bankingRepository.findByShipAndYear(shipId, year);
+  }
 }

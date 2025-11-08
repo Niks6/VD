@@ -26,7 +26,7 @@ export interface IComplianceRepository {
 
 // Banking Repository
 export interface IBankingRepository {
-  findByShipAndYear(shipId: string, year: number): Promise<BankEntry[]>;
+  findByShipAndYear(shipId: string, year?: number): Promise<BankEntry[]>;
   findAvailableBalance(shipId: string): Promise<number>;
   create(data: Omit<BankEntry, 'id' | 'createdAt' | 'updatedAt'>): Promise<BankEntry>;
   applyBanking(shipId: string, amount: number, year: number): Promise<BankEntry[]>;

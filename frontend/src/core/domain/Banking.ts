@@ -1,7 +1,11 @@
 // Domain entity for Banking (Article 20)
 export interface ComplianceBalance {
+  shipId: string;
   year: number;
   cb: number; // Compliance Balance
+  energy?: number;
+  actual?: number;
+  target?: number;
   vessel?: string;
 }
 

@@ -4,7 +4,6 @@ import { Button } from '../../../shared/components/Button';
 import { Select } from '../../../shared/components/Select';
 import { LoadingSpinner } from '../../../shared/components/LoadingSpinner';
 import { Alert } from '../../../shared/components/Alert';
-import { useAsync } from '../../../shared/hooks/useAsync';
 import { ComplianceBalance, BankingResult } from '../../../core/domain/Banking';
 
 interface BankingTabProps {
@@ -13,19 +12,44 @@ interface BankingTabProps {
 
 export const BankingTab: React.FC<BankingTabProps> = ({ bankingUseCase }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedShip, setSelectedShip] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [deficitYear, setDeficitYear] = useState(new Date().getFullYear());
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
   const [operationResult, setOperationResult] = useState<BankingResult | null>(null);
+  const [allBalances, setAllBalances] = useState<ComplianceBalance[]>([]);
 
-  const { data: balance, isLoading, error, execute: refetchBalance } = useAsync<ComplianceBalance>(
-    () => bankingUseCase.getComplianceBalance(selectedYear),
-    true
-  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   React.useEffect(() => {
-    refetchBalance();
+    fetchBalances();
   }, [selectedYear]);
+
+  const fetchBalances = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const API_BASE_URL = 'http://localhost:3000/api';
+      const response = await fetch(`${API_BASE_URL}/compliance/cb?year=${selectedYear}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch compliance balances');
+      }
+      const data = await response.json();
+      setAllBalances(Array.isArray(data) ? data : [data]);
+      
+      // Auto-select first ship if none selected
+      if (!selectedShip && data.length > 0) {
+        setSelectedShip(data[0].shipId);
+      }
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const balance = allBalances.find(b => b.shipId === selectedShip) || null;
 
   const handleBankSurplus = async () => {
     if (!balance || balance.cb <= 0) {
@@ -42,7 +66,7 @@ export const BankingTab: React.FC<BankingTabProps> = ({ bankingUseCase }) => {
       const result = await bankingUseCase.bankSurplus(selectedYear, amount);
       setOperationResult(result);
       setAlert({ type: 'success', message: `Successfully banked ${amount.toFixed(2)} CB units` });
-      refetchBalance();
+      fetchBalances();
     } catch (error) {
       setAlert({ type: 'error', message: (error as Error).message });
     }
@@ -58,7 +82,7 @@ export const BankingTab: React.FC<BankingTabProps> = ({ bankingUseCase }) => {
       const result = await bankingUseCase.applyBanked({ deficitYear, amount });
       setOperationResult(result);
       setAlert({ type: 'success', message: `Successfully applied ${amount.toFixed(2)} CB units to year ${deficitYear}` });
-      refetchBalance();
+      fetchBalances();
     } catch (error) {
       setAlert({ type: 'error', message: (error as Error).message });
     }
@@ -86,6 +110,17 @@ export const BankingTab: React.FC<BankingTabProps> = ({ bankingUseCase }) => {
             options={years.map(y => ({ value: y, label: y.toString() }))}
           />
         </div>
+
+        {allBalances.length > 0 && (
+          <div className="mb-4">
+            <Select
+              label="Select Ship/Route"
+              value={selectedShip}
+              onChange={(e) => setSelectedShip(e.target.value)}
+              options={allBalances.map(b => ({ value: b.shipId, label: b.shipId }))}
+            />
+          </div>
+        )}
       </Card>
 
       {alert && (
