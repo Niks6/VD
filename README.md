@@ -195,67 +195,79 @@ The application uses PostgreSQL with Prisma ORM. Below is an overview of the mai
 ```prisma
 model Route {
   id              String   @id @default(uuid())
-  routeId         String   @unique
-  vesselType      String
-  fuelType        String
+  routeId         String   @unique @map("route_id")
+  vesselType      String   @map("vessel_type")
+  fuelType        String   @map("fuel_type")
   year            Int
-  ghgIntensity    Float    // gCO₂e/MJ
-  fuelConsumption Float    // tonnes
-  distance        Float    // km
-  totalEmissions  Float    // tonnes CO₂e
-  isBaseline      Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  ghgIntensity    Float    @map("ghg_intensity")    // gCO₂e/MJ
+  fuelConsumption Float    @map("fuel_consumption") // tonnes
+  distance        Float                              // km
+  totalEmissions  Float    @map("total_emissions")  // tonnes CO₂e
+  isBaseline      Boolean  @default(false) @map("is_baseline")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
+  @@index([year])
+  @@index([vesselType])
+  @@index([fuelType])
+  @@index([isBaseline])
   @@map("routes")
 }
 
 model ShipCompliance {
   id        String   @id @default(uuid())
-  shipId    String
+  shipId    String   @map("ship_id")
   year      Int
-  cbGco2eq  Float    // Compliance Balance in gCO₂e
-  energy    Float    // Energy in scope (MJ)
-  actual    Float    // Actual GHG intensity
-  target    Float    // Target GHG intensity
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  cbGco2eq  Float    @map("cb_gco2eq")  // Compliance Balance in gCO₂e
+  energy    Float                       // Energy in scope (MJ)
+  actual    Float                       // Actual GHG intensity
+  target    Float                       // Target GHG intensity
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   
   @@unique([shipId, year])
+  @@index([shipId])
+  @@index([year])
   @@map("ship_compliance")
 }
 
 model BankEntry {
   id          String   @id @default(uuid())
-  shipId      String
+  shipId      String   @map("ship_id")
   year        Int
-  amountGco2eq Float   // Amount banked (positive)
-  applied     Boolean  @default(false)
-  appliedYear Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  amountGco2eq Float   @map("amount_gco2eq")  // Amount banked (positive)
+  applied     Boolean  @default(false)        // Whether this has been applied
+  appliedYear Int?     @map("applied_year")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
   
+  @@index([shipId])
+  @@index([year])
+  @@index([applied])
   @@map("bank_entries")
 }
 
 model Pool {
   id        String       @id @default(uuid())
   year      Int
-  totalCb   Float
-  createdAt DateTime     @default(now())
+  totalCb   Float        @map("total_cb")
+  createdAt DateTime     @default(now()) @map("created_at")
   members   PoolMember[]
   
+  @@index([year])
   @@map("pools")
 }
 
 model PoolMember {
   id       String @id @default(uuid())
-  poolId   String
-  shipId   String
-  cbBefore Float
-  cbAfter  Float
+  poolId   String @map("pool_id")
+  shipId   String @map("ship_id")
+  cbBefore Float  @map("cb_before")
+  cbAfter  Float  @map("cb_after")
   pool     Pool   @relation(fields: [poolId], references: [id], onDelete: Cascade)
   
+  @@index([poolId])
+  @@index([shipId])
   @@map("pool_members")
 }
 ```
