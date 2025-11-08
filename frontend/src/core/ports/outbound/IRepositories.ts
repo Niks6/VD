@@ -1,8 +1,8 @@
 // Outbound port - Repository/API interface
-import { Route, RouteFilters } from '../domain/Route';
-import { ComparisonData } from '../domain/Comparison';
-import { ComplianceBalance, BankingRequest, BankingResult, ApplyBankingRequest } from '../domain/Banking';
-import { AdjustedCompliance, CreatePoolRequest, Pool } from '../domain/Pooling';
+import { Route, RouteFilters } from '../../domain/Route';
+import { ComparisonData } from '../../domain/Comparison';
+import { ComplianceBalance, BankingRequest, BankingResult, ApplyBankingRequest } from '../../domain/Banking';
+import { AdjustedCompliance, CreatePoolRequest, Pool } from '../../domain/Pooling';
 
 export interface IRoutesRepository {
   getRoutes(filters?: RouteFilters): Promise<Route[]>;

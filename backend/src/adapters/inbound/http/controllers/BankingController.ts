@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IBankingService } from '../../../core/ports/IServices';
+import { IBankingService } from '../../../../core/ports/IServices';
 
 export class BankingController {
   constructor(private readonly bankingService: IBankingService) {}

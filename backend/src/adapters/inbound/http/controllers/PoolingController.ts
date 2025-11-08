@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IPoolingService } from '../../../core/ports/IServices';
+import { IPoolingService } from '../../../../core/ports/IServices';
 
 export class PoolingController {
   constructor(private readonly poolingService: IPoolingService) {}

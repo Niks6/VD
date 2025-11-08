@@ -25,7 +25,11 @@ export const RoutesTab: React.FC<RoutesTabProps> = ({ routesUseCase }) => {
     if (value === 'all' || value === '') {
       delete newFilters[key];
     } else {
-      newFilters[key] = key === 'year' ? parseInt(value) : value;
+      if (key === 'year') {
+        newFilters[key] = parseInt(value);
+      } else {
+        newFilters[key] = value;
+      }
     }
     setFilters(newFilters);
   };

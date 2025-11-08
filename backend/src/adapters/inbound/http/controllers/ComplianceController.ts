@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { IComplianceService } from '../../../core/ports/IServices';
-import { IRoutesRepository } from '../../../core/ports/IRepositories';
-import { Route } from '../../../core/domain/Route';
+import { IComplianceService } from '../../../../core/ports/IServices';
+import { IRoutesRepository } from '../../../../core/ports/IRepositories';
+import { Route } from '../../../../core/domain/Route';
 
 export class ComplianceController {
   constructor(

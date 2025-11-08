@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IRoutesService } from '../../../core/ports/IServices';
+import { IRoutesService } from '../../../../core/ports/IServices';
 
 export class RoutesController {
   constructor(private readonly routesService: IRoutesService) {}

@@ -1,8 +1,8 @@
 // Inbound port - Use cases interface
-import { Route, RouteFilters } from '../domain/Route';
-import { ComparisonResult } from '../domain/Comparison';
-import { ComplianceBalance, BankingResult, ApplyBankingRequest } from '../domain/Banking';
-import { AdjustedCompliance, Pool, CreatePoolRequest, PoolValidationResult } from '../domain/Pooling';
+import { Route, RouteFilters } from '../../domain/Route';
+import { ComparisonResult } from '../../domain/Comparison';
+import { ComplianceBalance, BankingResult, ApplyBankingRequest } from '../../domain/Banking';
+import { AdjustedCompliance, Pool, CreatePoolRequest, PoolValidationResult } from '../../domain/Pooling';
 
 // Routes use cases
 export interface IRoutesUseCase {

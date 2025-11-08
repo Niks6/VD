@@ -39,7 +39,6 @@ export class PoolingUseCase implements IPoolingUseCase {
 
     // Rule 2 & 3: Check deficit and surplus ships
     const hasDeficit = poolMembers.some(m => m.adjustedCB < 0);
-    const hasSurplus = poolMembers.some(m => m.adjustedCB > 0);
 
     if (hasDeficit && totalCB >= 0) {
       // Distribute evenly (simplified logic - can be enhanced)
