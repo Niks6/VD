@@ -59,7 +59,7 @@ export function createApp(): Express {
 
   // Initialize controllers (Inbound adapters)
   const routesController = new RoutesController(routesService);
-  const complianceController = new ComplianceController(complianceService);
+  const complianceController = new ComplianceController(complianceService, routesRepository);
   const bankingController = new BankingController(bankingService);
   const poolingController = new PoolingController(poolingService);
 

@@ -10,6 +10,7 @@ export interface IRoutesRepository {
   findAll(filters?: RouteFilters): Promise<Route[]>;
   findById(id: string): Promise<Route | null>;
   findByRouteId(routeId: string): Promise<Route | null>;
+  findByYear(year: number): Promise<Route[]>;
   findBaseline(): Promise<Route | null>;
   create(data: CreateRouteDTO): Promise<Route>;
   setBaseline(routeId: string): Promise<void>;

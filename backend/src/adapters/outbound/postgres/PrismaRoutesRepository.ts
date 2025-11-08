@@ -29,6 +29,10 @@ export class PrismaRoutesRepository implements IRoutesRepository {
     return this.prisma.route.findUnique({ where: { routeId } });
   }
 
+  async findByYear(year: number): Promise<Route[]> {
+    return this.prisma.route.findMany({ where: { year } });
+  }
+
   async findBaseline(): Promise<Route | null> {
     return this.prisma.route.findFirst({ where: { isBaseline: true } });
   }
