@@ -1,9 +1,8 @@
 // Outbound ports - Repository interfaces
 import { Route, RouteFilters, CreateRouteDTO } from '../domain/Route';
-import { ShipCompliance, ComplianceCalculation } from '../domain/Compliance';
-import { BankEntry, BankSurplusRequest, ApplyBankingRequest } from '../domain/Banking';
+import { ShipCompliance } from '../domain/Compliance';
+import { BankEntry } from '../domain/Banking';
 import { Pool, CreatePoolRequest, PoolMember } from '../domain/Pool';
-import { ComparisonData } from '../domain/Comparison';
 
 // Routes Repository
 export interface IRoutesRepository {

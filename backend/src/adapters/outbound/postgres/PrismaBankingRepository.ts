@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { IBankingRepository } from '../../core/ports/IRepositories';
-import { BankEntry } from '../../core/domain/Banking';
+import { IBankingRepository } from '../../../core/ports/IRepositories';
+import { BankEntry } from '../../../core/domain/Banking';
 
 export class PrismaBankingRepository implements IBankingRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -39,7 +39,15 @@ export class PrismaBankingRepository implements IBankingRepository {
   async create(
     data: Omit<BankEntry, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<BankEntry> {
-    return this.prisma.bankEntry.create({ data });
+    return this.prisma.bankEntry.create({ 
+      data: {
+        shipId: data.shipId,
+        year: data.year,
+        amountGco2eq: data.amountGco2eq,
+        applied: data.applied,
+        appliedYear: data.appliedYear,
+      }
+    });
   }
 
   async applyBanking(shipId: string, amount: number, year: number): Promise<BankEntry[]> {

@@ -4,12 +4,13 @@ import { IBankingService } from '../../../core/ports/IServices';
 export class BankingController {
   constructor(private readonly bankingService: IBankingService) {}
 
-  bankSurplus = async (req: Request, res: Response, next: NextFunction) => {
+  bankSurplus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { shipId, year, amount } = req.body;
 
       if (!shipId || !year || amount === undefined) {
-        return res.status(400).json({ error: 'shipId, year, and amount are required' });
+        res.status(400).json({ error: 'shipId, year, and amount are required' });
+        return;
       }
 
       const result = await this.bankingService.bankSurplus({
@@ -24,12 +25,13 @@ export class BankingController {
     }
   };
 
-  applyBanked = async (req: Request, res: Response, next: NextFunction) => {
+  applyBanked = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { shipId, deficitYear, amount } = req.body;
 
       if (!shipId || !deficitYear || amount === undefined) {
-        return res.status(400).json({ error: 'shipId, deficitYear, and amount are required' });
+        res.status(400).json({ error: 'shipId, deficitYear, and amount are required' });
+        return;
       }
 
       const result = await this.bankingService.applyBanked({
@@ -44,12 +46,13 @@ export class BankingController {
     }
   };
 
-  getAvailableBalance = async (req: Request, res: Response, next: NextFunction) => {
+  getAvailableBalance = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { shipId } = req.query;
 
       if (!shipId) {
-        return res.status(400).json({ error: 'shipId is required' });
+        res.status(400).json({ error: 'shipId is required' });
+        return;
       }
 
       const balance = await this.bankingService.getAvailableBalance(shipId as string);

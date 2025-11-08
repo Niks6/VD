@@ -4,12 +4,13 @@ import { IPoolingService } from '../../../core/ports/IServices';
 export class PoolingController {
   constructor(private readonly poolingService: IPoolingService) {}
 
-  createPool = async (req: Request, res: Response, next: NextFunction) => {
+  createPool = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { year, vessels } = req.body;
 
       if (!year || !vessels || !Array.isArray(vessels)) {
-        return res.status(400).json({ error: 'year and vessels array are required' });
+        res.status(400).json({ error: 'year and vessels array are required' });
+        return;
       }
 
       const pool = await this.poolingService.createPool({
@@ -23,12 +24,13 @@ export class PoolingController {
     }
   };
 
-  validatePool = async (req: Request, res: Response, next: NextFunction) => {
+  validatePool = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { year, vessels } = req.body;
 
       if (!year || !vessels || !Array.isArray(vessels)) {
-        return res.status(400).json({ error: 'year and vessels array are required' });
+        res.status(400).json({ error: 'year and vessels array are required' });
+        return;
       }
 
       const validation = await this.poolingService.validatePool({

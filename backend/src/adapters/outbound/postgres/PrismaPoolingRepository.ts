@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { IPoolingRepository } from '../../core/ports/IRepositories';
-import { Pool, CreatePoolRequest, PoolMember } from '../../core/domain/Pool';
+import { IPoolingRepository } from '../../../core/ports/IRepositories';
+import { Pool, CreatePoolRequest, PoolMember } from '../../../core/domain/Pool';
 
 export class PrismaPoolingRepository implements IPoolingRepository {
   constructor(private readonly prisma: PrismaClient) {}

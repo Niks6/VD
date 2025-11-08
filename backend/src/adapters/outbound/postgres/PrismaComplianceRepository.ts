@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { IComplianceRepository } from '../../core/ports/IRepositories';
-import { ShipCompliance } from '../../core/domain/Compliance';
+import { IComplianceRepository } from '../../../core/ports/IRepositories';
+import { ShipCompliance } from '../../../core/domain/Compliance';
 
 export class PrismaComplianceRepository implements IComplianceRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -16,7 +16,16 @@ export class PrismaComplianceRepository implements IComplianceRepository {
   async create(
     data: Omit<ShipCompliance, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<ShipCompliance> {
-    return this.prisma.shipCompliance.create({ data });
+    return this.prisma.shipCompliance.create({ 
+      data: {
+        shipId: data.shipId,
+        year: data.year,
+        cbGco2eq: data.cbGco2eq,
+        energy: data.energy,
+        actual: data.actual,
+        target: data.target,
+      }
+    });
   }
 
   async update(id: string, data: Partial<ShipCompliance>): Promise<ShipCompliance> {

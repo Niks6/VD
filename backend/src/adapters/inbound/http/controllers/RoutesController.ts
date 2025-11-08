@@ -31,7 +31,7 @@ export class RoutesController {
     }
   };
 
-  getComparison = async (req: Request, res: Response, next: NextFunction) => {
+  getComparison = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const comparison = await this.routesService.getComparison();
       res.json(comparison);

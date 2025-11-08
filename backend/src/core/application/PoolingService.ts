@@ -74,9 +74,6 @@ export class PoolingService implements IPoolingService {
     const targetCBPerShip = totalCB / members.length;
 
     // Apply greedy allocation: transfer from surplus to deficit
-    const surplusShips = members.filter(m => m.cbBefore > targetCBPerShip);
-    const deficitShips = members.filter(m => m.cbBefore < targetCBPerShip);
-
     // Simple equal distribution first
     members.forEach(member => {
       member.cbAfter = targetCBPerShip;

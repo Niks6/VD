@@ -64,7 +64,7 @@ export function createApp(): Express {
   const poolingController = new PoolingController(poolingService);
 
   // Health check
-  app.get('/health', (req: Request, res: Response) => {
+  app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
@@ -78,12 +78,12 @@ export function createApp(): Express {
   app.use('/api', apiRouter);
 
   // 404 handler
-  app.use((req: Request, res: Response) => {
+  app.use((_req: Request, res: Response) => {
     res.status(404).json({ error: 'Not found' });
   });
 
   // Error handler
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error('Error:', err);
     res.status(500).json({
       error: err.message || 'Internal server error',

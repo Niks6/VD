@@ -41,7 +41,7 @@ export class ComplianceService implements IComplianceService {
     const cb = calculateComplianceBalance(target, actual, energy);
 
     // Store in database
-    const storedCompliance = await this.complianceRepository.create({
+    await this.complianceRepository.create({
       shipId,
       year,
       cbGco2eq: cb,
